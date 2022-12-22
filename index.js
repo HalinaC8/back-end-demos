@@ -36,7 +36,17 @@ app.delete('/dogs/:id', async (req, res, next) => {
 app.get('/dogs', async (req, res, next) => {
   try {
     //TO DO
-    res.send("need to complete this GET route");
+    const where = {}
+    const queriesArray = ["name", "description", "breed", "color"];
+    for (const key of queriesArray){
+      if(req.query[key]){
+        where[key]={
+          [Op.like]:`%${req.query[key]}%`
+        }
+      }
+    } 
+    const dogs = await Dog.findAll({where})
+    res.send(dogs);
   } catch (error) {
     next(error)
   }
